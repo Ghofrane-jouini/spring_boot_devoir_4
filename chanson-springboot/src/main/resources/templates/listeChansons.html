@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+
+<head>
+    <meta charset="utf-8">
+    <title>Liste des Chansons</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div th:replace="~{template :: navbar}"></div>
+
+<div class="container mt-4">
+    <div class="card">
+
+        <!-- Header -->
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Liste des Chansons</h5>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Bouton Ajouter -->
+            <div class="mb-3" th:if="${isAdmin or isAgent}">
+                <a class="btn btn-success" th:href="@{/showCreate}">
+                    Ajouter une chanson
+                </a>
+            </div>
+
+            <!-- Table -->
+            <table class="table table-striped table-hover">
+
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Artiste</th>
+                    <th>Durée (sec)</th>
+                    <th>Date de sortie</th>
+                    <th>Genre</th>
+                    <th th:if="${isAdmin}" colspan="2">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <!-- ✅ LOOP CORRECT -->
+                <tr th:each="c : ${chansons.content}">
+
+                    <td th:text="${c.idChanson}"></td>
+
+                    <td th:text="${c.titreChanson}"></td>
+
+                    <td th:text="${c.artiste}"></td>
+
+                    <td th:text="${c.dureeSecondes}"></td>
+
+                    <!-- format date -->
+                    <td th:text="${#dates.format(c.dateSortie, 'yyyy-MM-dd')}"></td>
+
+                    <!-- genre -->
+                    <td th:text="${c.nomGenre}"></td>
+
+                    <!-- actions -->
+                    <td th:if="${isAdmin}">
+                        <a class="btn btn-danger btn-sm"
+                           onclick="return confirm('Supprimer ?')"
+                           th:href="@{/supprimerChanson(id=${c.idChanson}, page=${currentPage}, size=${size})}">
+                            Supprimer
+                        </a>
+                    </td>
+
+                    <td th:if="${isAdmin}">
+                        <a class="btn btn-warning btn-sm"
+                           th:href="@{/modifierChanson(id=${c.idChanson}, page=${currentPage}, size=${size})}">
+                            Éditer
+                        </a>
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <ul class="nav nav-pills">
+
+                <li th:each="p, status : ${pages}">
+                    <a th:class="${status.index == currentPage ? 'btn btn-primary mr-1' : 'btn btn-outline-primary mr-1'}"
+                       th:href="@{/ListeChansons(page=${status.index}, size=${size})}"
+                       th:text="${status.index + 1}">
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<!-- JS -->
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

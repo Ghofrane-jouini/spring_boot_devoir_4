@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>Gestion des Chansons</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+<div th:replace="~{template :: navbar}"></div>
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4"> Gestion des Chansons</h1>
+        <p class="lead">Bienvenue dans l'application de gestion musicale.</p>
+        <a class="btn btn-primary btn-lg" th:href="@{ListeChansons}">Voir les chansons</a>
+    </div>
+</div>
+</body>
+</html>

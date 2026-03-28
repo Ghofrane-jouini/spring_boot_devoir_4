@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>Formulaire Chanson</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+<div th:replace="~{template :: navbar}"></div>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0" th:if="${mode == 'new'}">Ajouter une chanson</h5>
+            <h5 class="mb-0" th:if="${mode == 'edit'}"> Modifier la chanson</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/saveChanson}" th:object="${Chanson}" method="post">
+
+                <input type="hidden" th:field="*{idChanson}" />
+                <input type="hidden" name="page" th:value="${currentPage}" />
+                <input type="hidden" name="size" th:value="${size}" />
+
+                <!-- Titre -->
+                <div class="form-group">
+                    <label>Titre de la chanson :</label>
+                    <input type="text" th:field="*{titreChanson}" class="form-control"
+                           placeholder="Ex: Bohemian Rhapsody" />
+                    <span th:errors="*{titreChanson}" class="text-danger small"></span>
+                </div>
+
+                <!-- Artiste -->
+                <div class="form-group">
+                    <label>Artiste :</label>
+                    <input type="text" th:field="*{artiste}" class="form-control"
+                           placeholder="Ex: Queen" />
+                    <span th:errors="*{artiste}" class="text-danger small"></span>
+                </div>
+
+                <!-- Durée -->
+                <div class="form-group">
+                    <label>Durée (en secondes) :</label>
+                    <input type="number" th:field="*{dureeSecondes}" class="form-control"
+                           placeholder="Ex: 354" min="1" max="3600" />
+                    <span th:errors="*{dureeSecondes}" class="text-danger small"></span>
+                </div>
+
+                <!-- Date de sortie -->
+                <div class="form-group">
+                    <label>Date de sortie :</label>
+                    <input type="date" th:field="*{dateSortie}" class="form-control" />
+                    <span th:errors="*{dateSortie}" class="text-danger small"></span>
+                </div>
+
+                <!-- Genre -->
+                <div class="form-group">
+                    <label>Genre musical :</label>
+
+                    <select name="genre.idGenre" class="form-control" th:if="${Chanson.genre != null}">
+                        <option value="">-- Choisir un genre --</option>
+                        <option th:each="g : ${Genres}"
+                                th:value="${g.idGenre}"
+                                th:text="${g.nomGenre}"
+                                th:selected="${g.idGenre == Chanson.genre.idGenre}">
+                        </option>
+                    </select>
+
+                    <select name="genre.idGenre" class="form-control" th:if="${Chanson.genre == null}">
+                        <option value="">-- Choisir un genre --</option>
+                        <option th:each="g : ${Genres}"
+                                th:value="${g.idGenre}"
+                                th:text="${g.nomGenre}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Boutons -->
+                <button type="submit" class="btn btn-primary"
+                        th:text="${mode == 'edit'} ? 'Modifier' : 'Ajouter'"></button>
+                <a class="btn btn-secondary ml-2" th:href="@{/ListeChansons}">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
